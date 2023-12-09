@@ -61,7 +61,6 @@ class LanchesController {
 
     async alterar(req, res) {
         let lanche = await this.getLancheDaRequisicao(req);
-        console.log(lanche);
         let [ url, queryString ] = req.url.split('?');
         let urlList = url.split('/');
         url = urlList[1];
@@ -80,7 +79,6 @@ class LanchesController {
     }
     
     apagar(req, res) {
-        console.log('teste');
         let [ url, queryString ] = req.url.split('?');
         console.log(url);
         let urlList = url.split('/');
