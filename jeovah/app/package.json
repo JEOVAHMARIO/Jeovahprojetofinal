@@ -1,15 +1,15 @@
 {
-  "name": "area_f",
+  "name": "Lanche",
   "version": "1.0.0",
-  "description": "projeto academico",
+  "description": "projeto final",
   "main": "app.js",
   "scripts": {
     "start": "nodemon app.js"
   },
   "keywords": [
-    "academico"
+    "projeto final"
   ],
-  "author": "Thiago Cadore Vale",
+  "author": "Jeovah Mário",
   "license": "Apache-2.0",
   "dependencies": {
     "bcrypt": "^5.1.1",
