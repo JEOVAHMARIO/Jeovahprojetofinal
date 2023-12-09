@@ -37,8 +37,6 @@ class LanchesController {
     
     async inserir(req, res) {
         let lanche = await this.getLancheDaRequisicao(req);
-        console.log(lanche);
-        console.log('teste1');
         try {
             this.lanchesDao.inserir(lanche);
             utils.renderizarJSON(res, {
