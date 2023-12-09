@@ -5,6 +5,7 @@ const AutorController = require('./controllers/AutorController');
 const AuthController = require('./controllers/AuthController');
 const UsuariosController = require('./controllers/UsuariosControllers');
 const LanchesMysqlDao = require('./lib/projeto/LanchesMysqlDao');
+const LanchesDao = require('./lib/projeto/LanchesDao');
 const UsuariosMysqlDao = require('./lib/projeto/UsuariosMysqlDao');
 const mysql = require('mysql');
 
