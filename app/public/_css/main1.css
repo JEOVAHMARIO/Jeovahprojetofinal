@@ -1,0 +1,91 @@
+/*classe para ajustar cor de texto e cor de fundo*/
+  h1 {
+  color: rgb(185, 15, 15);
+}
+  h2 {
+  color: rgba(14, 83, 37, 0.87);
+}
+body {
+  background-color: rgba(24, 143, 0, 0.288);
+}
+/*Classe para ajustar imagem index*/
+.img_figura {
+  max-width: 150px;
+  width: auto;
+  height: auto;
+}
+.img_figura {
+  max-width: 150px;
+  width: auto;
+  height: auto;
+}
+.img_figura {
+  max-width: 150px;
+  width: auto;
+  height: auto;
+}
+/*Classe para ajustar imagem detalhes*/
+.img_misto {
+  max-width: 150px;
+  width: auto;
+  height: auto;
+}
+.img_suco {
+  max-width: 150px;
+  width: auto;
+  height: auto;
+}
+.img_água {
+  max-width: 150px;
+  width: auto;
+  height: auto;
+}
+.img_lanche {
+  max-width: 150px;
+  width: auto;
+  height: auto;
+}
+/*Classe para ajustar desenvolvido*/
+.desenvolvido_texto {
+  text-align: center;
+  color:rgba(189, 19, 13, 0.911);
+  font-family:'Times New Roman', Times, serif;
+  font-size: 15px;
+  padding: 1cm;
+  margin: auto;
+}
+/*classe ajuste de texto*/
+.texto1 {
+  color:rgba(245, 25, 10, 0.904);
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 15px;
+  text-align:center;
+  padding: 0,70em;
+  margin: 0;
+}
+.texto2 {
+  color:rgba(245, 25, 10, 0.904);
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 15px;
+  text-align:center;
+  padding: 0,70em;
+  margin: auto;
+}
+.texto3 {
+  color:rgba(100, 107, 94, 0.747);
+  font-family: Verdana;
+  font-size: 20px;
+  font-weight: bold;
+  text-align:center;
+  padding: 0,70em;
+  margin: auto;
+}
+.texto4 {
+  color:rgba(27, 114, 19, 0.822);
+  font-family: Verdana;
+  font-size: 15px;
+  font-weight: bold;
+  text-align:left;
+  padding: 0,70em;
+  margin: auto;
+}
