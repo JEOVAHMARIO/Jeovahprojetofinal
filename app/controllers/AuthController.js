@@ -1,72 +1,69 @@
-const utils = require("../lib/utils");
 const jwt = require('jsonwebtoken');
+const express = require('express');
+const utils = require("../lib/utils");
 
 class AuthController {
-    constructor(usuariosDao) {
-        this.usuariosDao = usuariosDao;
+    constructor(store) {
+        this.store = store;
         this.SEGREDO_JWT = process.env.SEGREDO_JWT;
     }
 
+    getRouter() {
+        let rotas = express.Router();
+
+        rotas.get('/', (req, res) => {
+            this.index(req, res);
+        });
+
+        rotas.post('/', (req, res) => {
+            this.logar(req, res);
+        });
+
+        return rotas;
+    }
+
     index(req, res) {
-        utils.renderizarEjs(res, './views/index.ejs');
-    }
-    admin(req, res) {
-        utils.renderizarEjs(res, './views/admin.ejs');
-    }
-    cadastro(req, res) {
-        utils.renderizarEjs(res, './views/cadastro.ejs');
-    }
-    login(req, res) {
-        utils.renderizarEjs(res, './views/login.ejs');
+        res.render('login');
     }
 
     async logar(req, res) {
-        let corpo = await utils.getCorpo(req);
-        let usuario = await this.usuariosDao.autenticar(corpo.nome, corpo.senha);
+        let corpo = req.body;
+        let usuario = await this.store.autenticar(corpo.nome, corpo.senha);
         if (usuario) {
-            console.log({usuario});          
-            let token = jwt.sign({
-                ...usuario
-            }, this.SEGREDO_JWT);
-            utils.renderizarJSON(res, {
+            console.log({ usuario });
+            let token = jwt.sign({ ...usuario }, this.SEGREDO_JWT);
+            res.json({
                 token,
                 mensagem: 'Usuário logado com sucesso!'
             });
-        }
-        else {
+        } else {
             utils.renderizarJSON(res, {
                 mensagem: 'Usuário ou senha inválidos!'
             }, 401);
         }
     }
 
-    // ponte
     autorizar(req, res, proximoControlador, papeisPermitidos) {
         console.log('autorizando', req.headers);
-        let token = req.headers.authorization.split(' ')[0];
-        console.log(token);
-        console.log(this.SEGREDO_JWT);
         try {
+            let token = req.headers.authorization.split(' ')[1];
             let usuario = jwt.verify(token, this.SEGREDO_JWT);
             req.usuario = usuario;
-            console.log({usuario}, papeisPermitidos);
-            console.log(usuario.papel);
+            console.log({ usuario }, papeisPermitidos);
 
-            if (papeisPermitidos.includes(usuario.papel)) {
+            if (papeisPermitidos.includes(usuario.papel) || papeisPermitidos.length === 0) {
                 proximoControlador();
-            }
-            else {
-                utils.renderizarJSON(res, {
+            } else {
+                res.status(403).json({
                     mensagem: 'Não autorizado!'
-                }, 403);
+                });
             }
-
         } catch (e) {
-            utils.renderizarJSON(res, {
-                mensagem: 'Não autenticado!'
-            }, 401);
+            res.status(401).json({
+                mensagem: 'Não autenticado!',
+                error: e.message
+            });
         }
-
     }
 }
 

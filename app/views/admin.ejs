@@ -1,68 +1,140 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jeovah Lanches</title>
-    <link rel="stylesheet" href="_css/estilo2.css"/>
-    <script src="/_js/lanche.js"></script>
+    <title>Jeovah Lanches - Admin</title>
+    <link rel="stylesheet" href="/_css/estilo2.css" />
     <style>
         .correto {
             color: rgb(227, 243, 9);
         }
+
         .incorreto {
             color: red;
         }
+
+        .img_lanche {
+            max-width: 100%;
+            height: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .acoes {
+            display: flex;
+            gap: 5px;
+        }
+
+        .acoes a {
+            text-decoration: none;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            color: #333;
+        }
     </style>
 </head>
+
 <body>
-<header>
-    <%- include('/home/node/app/views/cabecalho.ejs') %> 
+    <header>
+        <%- include('/home/node/app/views/cabecalho.ejs') %>
     </header>
 
-<header id="Titulo_site">
+    <div id="app">
+        <section id="Titulo_site">
+            <h1>Jeovah Lanches - Admin</h1>
+            <img class="img_lanche" src="_img/frase_hamburguer.jpg" alt="Foto de Sanduíche">
+            <nav>
+                <router-link to="/">Início</router-link>
+                <router-link to="/admin/lanches">Admin Lanches</router-link>
+                <router-link to="/admin/usuarios">Admin Usuários</router-link>
+                <router-link to="/usuarios">Usuários</router-link>
+                <router-link to="/autor">Autor</router-link>
+                <router-link to="/login">Login</router-link>
+            </nav>
+            <main>
+                <router-view />
+            </main>
+        </section>
 
-    <section id="resposta">
-        <form method="post" onSubmit="event.preventDefault(); lanches();" id="formulario">
-            <br><br>
-            <h2>Cardápio</h2><br>
-            <input name="id" type="hidden" value="0">
-            <label for="nome">Lanche:</label><br>
-            <input type="text" id="nome" name="nome"><br>
-            <label for="valor">Valor:</label><br>
-            <input type="number" id="valor" name="valor"><br>
-            <label for="quantidade">Quantidade:</label><br>
-            <input type="number" id="quantidade" name="quantidade"><br><br>
-            <button type="submit" class="button button2">Registrar</button>
-        </form>
-    </section>
-    
-    <br>
-    <button onclick="listar();">Listar</button>
-    
-    <section>
-        <table>
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Lanche</th>
-                    <th>Valor</th>
-                    <th>Quantidade</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody id="lanches">
-                
-            </tbody>
-        </table>
-    </section>
-<div>
-    <section id="Titulo_site">
-        <H1>Jeovah Lanches</H1>
-        <img class="img_lanche" src="_img/frase_hamburguer.jpg" alt="Foto de Sanduíche">
-    </section>
-</div>
-<footer class="desenvolvido_texto">Desenvolvido por Jeovah <a href="autor">Autor</a></footer>
-    <body>
-    </html>
+        <footer class="desenvolvido_texto">Desenvolvido por Jeovah <a href="autor">Autor</a></footer>
+    </div>
+
+    <script src="https://unpkg.com/vue@3"></script>
+    <script src="https://unpkg.com/vue-router@4.0.15/dist/vue-router.global.js"></script>
+    <script type="module">
+        import CrudLanches from './_js/CrudLanches.js'
+        import CartasLanches from './_js/CartasLanches.js'
+        import ListLanches from './_js/ListLanches.js'
+        import ExibeLanches from './_js/ExibeLanches.js'
+        import Autor from './_js/Autor.js'
+        import Detalhes from './_js/Detalhes.js'
+        import DetalhesUsuarios from './_js/DetalhesUsuarios.js'
+        import CrudUsuarios from './_js/CrudUsuarios.js'
+        import ExibeUsuarios from './_js/ExibeUsuarios.js'
+        import ListUsuarios from './_js/ListUsuarios.js'
+        import Usuarios from './_js/Usuarios.js'
+        import Login from './_js/Login.js'
+
+        const lanches = Vue.ref([{ nome: 'Beto', id: 1, valor: 2, quantidade: 3 }]);
+        const usuarios = Vue.ref([{ nome: 'Beto', email: 'beto@example.com' }]);
+
+        const routes = [
+            { path: '/', component: ListLanches, props: { 
+                lanches
+            } },
+            { path: '/usuarios', component: ListUsuarios, props: { 
+                usuarios
+            } },
+            { path: '/admin/lanches', component: CrudLanches, props: { 
+                lanches
+            } },
+            { path: '/admin/usuarios', component: CrudUsuarios, props: { 
+                usuarios
+            } },
+            { path: '/autor', component: Autor },
+            { path: '/login', component: Login },
+            { path: '/detalhes/:id', component: Detalhes, props: {
+                lanches
+            } },
+            { path: '/detalhesUsuarios/:id', component: DetalhesUsuarios, props: {
+                usuarios
+            } }
+        ]
+
+        const router = VueRouter.createRouter({
+            history: VueRouter.createMemoryHistory(),
+            routes,
+        });
+
+        const app = Vue.createApp({
+            data() {
+                return {}
+            }
+        }).use(router).mount('#app');
+    </script>
+</body>
+
+</html>

@@ -1,108 +1,123 @@
-const Lanche = require('../lib/projeto/Lanche');
-const utils = require('../lib/utils');
+const express = require('express');
+const passport = require('passport');
+const { Sequelize, DataTypes, Model } = require('sequelize');
 
 class LanchesController {
-    constructor(lanchesDao) {
-        this.lanchesDao = lanchesDao;
-    }
-    async index(req, res) {
-        let lanches = await this.lanchesDao.listar();
-        utils.renderizarEjs(res, './views/index.ejs', {lanches});  
+    constructor(lanchesStore) {
+        this.lanchesStore = lanchesStore;
     }
 
-    async detalhes(req, res) {
-        let lanches = await this.lanchesDao.listar();
-        utils.renderizarEjs(res, './views/detalhes.ejs', {lanches});  
-    }
+    getRouter() {
+        let router = express.Router();
 
-    async autor(req, res) {
-        let lanches = await this.lanchesDao.listar();
-        utils.renderizarEjs(res, './views/autor.ejs', {lanches});  
-    }
+        router.get('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
+            try {
+                let lanches = await this.lanchesStore.listar();
+                if (req.headers.accept && req.headers.accept.includes('application/json')) {
+                    res.json(lanches);
+                } else {
+                    res.render('admin', { lanches });
+                }
+            } catch (error) {
+                console.error('Erro ao listar lanches:', error);
+                res.status(500).send('Erro ao listar lanches');
+            }
+        });
 
-    async cadastro(req, res) {
-        let lanches = await this.lanchesDao.listar();
-        utils.renderizarEjs(res, './views/cadastro.ejs', {lanches});  
-    }
+        router.get('/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+            try {
+                let id = req.params.id;
+                let lanche = await this.lanchesStore.procurarPorId(id);
+                if (lanche) {
+                    if (req.headers.accept && req.headers.accept.includes('application/json')) {
+                        res.json(lanche);
+                    } else {
+                        res.render('index', { lanche });
+                    }
+                } else {
+                    res.status(404).send('Lanche não encontrado');
+                }
+            } catch (error) {
+                console.error('Erro ao obter detalhes do lanche:', error);
+                res.status(500).send('Erro ao obter detalhes do lanche');
+            }
+        });
 
-    async login(req, res) {
-        let lanches = await this.lanchesDao.listar();
-        utils.renderizarEjs(res, './views/login.ejs', {lanches});  
+        router.delete('/:id', (req, res) => {
+            this.apagar(req, res);
+        });
+
+        router.post('/cadastro', async (req, res) => {
+            await this.inserir(req, res);
+        });
+
+        router.put('/cadastro/:id', (req, res) => {
+            this.alterar(req, res);
+        });
+
+        return router;
     }
 
     async listar(req, res) {
-        let lanches = await this.lanchesDao.listar();
-        utils.renderizarJSON(res, lanches);
-    }
-    
-    async inserir(req, res) {
-        let lanche = await this.getLancheDaRequisicao(req);
         try {
-            this.lanchesDao.inserir(lanche);
-            utils.renderizarJSON(res, {
-                lanche,
-                mensagem: 'mensagem_lanche_cadastrado'
+            let lanches = await this.lanchesStore.listar();
+            let dados = lanches.map(lanche => {
+                return { ...lanche.dataValues };
             });
-        } catch (e) {
-            utils.renderizarJSON(res, {
-                mensagem: e.message
-            }, 400);
+            res.render('lanches', { lanches: dados });
+        } catch (error) {
+            console.error('Erro ao listar lanches:', error);
+            res.status(500).send('Erro ao listar lanches');
         }
     }
 
-    async visualizar(req, res) {
-        let [ url, queryString ] = req.url.split('?');
-        let urlList = url.split('/');
-        url = urlList[1];
-        let id = urlList[2];      
-        let lanche = await this.lanchesDao.visualizar(id);
-        utils.renderizarJSON(res, lanche);
+    async inserir(req, res) {
+        try {
+            let lanche = await this.getLancheDaRequisicao(req);
+            lanche.id = await this.lanchesStore.inserir(lanche);
+            let lanches = await this.listar(req, res);
+            if (req.headers.accept === 'application/json') {
+                res.json(lanche.id);
+            } else {
+                res.render('lanches', { lanches });
+            }
+        } catch (e) {
+            console.log("erro inserir", e);
+            res.status(400).json({
+                mensagem: e.message
+            });
+        }
     }
 
     async alterar(req, res) {
         let lanche = await this.getLancheDaRequisicao(req);
-        console.log(lanche);
-        let [ url, queryString ] = req.url.split('?');
-        let urlList = url.split('/');
-        url = urlList[1];
-        let id = urlList[2];
-        console.log(id);
+        let id = req.params.id;
         try {
-            this.lanchesDao.alterar(id, lanche);
-            utils.renderizarJSON(res, {
-                mensagem: 'mensagem_lanche_alterado'
-            });
+            await this.lanchesStore.alterar(id, lanche);
+            res.send('Ok');
         } catch (e) {
-            utils.renderizarJSON(res, {
+            res.status(400).json({
                 mensagem: e.message
-            }, 400);
+            });
         }
     }
-    
-    apagar(req, res) {
-        console.log('teste');
-        let [ url, queryString ] = req.url.split('?');
-        console.log(url);
-        let urlList = url.split('/');
-        url = urlList[1];
-        let id = urlList[2];
-        console.log(id);
-        this.lanchesDao.apagar(id);
-        utils.renderizarJSON(res, {
+
+    async apagar(req, res) {
+        let id = req.params.id;
+        await this.lanchesStore.apagar(id);
+        res.json({
             mensagem: 'mensagem_lanche_apagado',
             id: id
         });
     }
 
     async getLancheDaRequisicao(req) {
-        let corpo = await utils.getCorpo(req);
-        console.log(corpo);
-        let lanche = new Lanche(
-            corpo.nome,
-            corpo.valor,
-            corpo.quantidade
-        );
-        return lanche;
+        let corpo = req.body;
+        return {
+            nome: corpo.nome,
+            valor: corpo.valor,
+            quantidade: corpo.quantidade
+        };
     }
 }
 

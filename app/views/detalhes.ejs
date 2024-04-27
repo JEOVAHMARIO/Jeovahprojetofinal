@@ -22,7 +22,7 @@
 
 <body>
     <header>
-        <%- include('/home/node/app/views/cabecalho.ejs') %>
+        <% include('/home/node/app/views/cabecalho.ejs') %>
     </header>
     <main>
         <div class="grid-container">
@@ -36,18 +36,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <% for (let lanche of lanches) { %>
-                            <tr>
-                                <td><%= lanche.nome %></td>
-                                <td><%= lanche.valor %></td>
-                                <td><%= lanche.quantidade %></td>
-                            </tr>
-                        <% } %>
+                        <tr>
+                            <td><%= lanche.nome %></td>
+                            <td><%= lanche.valor %></td>
+                            <td><%= lanche.quantidade %></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
-        </div>
-        
 
             <div class="grid-coluna">
                 <article class="item">
@@ -56,21 +52,20 @@
                     <h1>R$ 12,00</h1>
                 </article>
                 <article class="item">
-                    <h3>SUCO</H3>
+                    <h3>SUCO</h3>
                     <img class="img_suco" src="_img/suco_del_valle.jpg" alt="Foto de Suco">
-                    <h1>R$ 6,00</H1>
+                    <h1>R$ 6,00</h1>
                 </article>
                 <article class="item">
-                    <h3>ÁGUA</H3>
+                    <h3>ÁGUA</h3>
                     <img class="img_água" src="_img/agua_mineral.jpg" alt="Foto de água">
-                    <h1>R$ 2,00</H1>
+                    <h1>R$ 2,00</h1>
                 </article>
             </div>
         </div>
-        <title>Nossa missão</title>
-        <h2>Com uma equipe de profissionais, apaixonados por hamburgueria, fornecemos os melhores hamburguers. Do mistão
-            ao X-tudo, também temos sucos, refrigerantes e água. Nossa preocupação é proporcionar uma experiência única
-            para nossos clientes, e mantendo o foco de satisfação dos clientes.</h2>
+
+        <h2>Nossa missão</h2>
+        <p>Com uma equipe de profissionais, apaixonados por hamburgueria, fornecemos os melhores hambúrgueres. Do misto ao X-tudo, também temos sucos, refrigerantes e água. Nossa preocupação é proporcionar uma experiência única para nossos clientes, mantendo o foco na satisfação dos mesmos.</p>
     </main>
     <footer class="desenvolvido_texto">Desenvolvido por Jeovah <a href="autor">Autor</a></footer>
 </body>

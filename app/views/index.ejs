@@ -7,38 +7,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jeovah Lanches</title>
     <link rel="stylesheet" href="_css/estilo2.css" />
-<body>
+</head>
+
+<body id="app">
     <header>
-    <%- include('/home/node/app/views/cabecalho.ejs') %>
+        <%- include('/home/node/app/views/cabecalho.ejs') %>
     </header>
     <main>
-        <div>
-            <section id="Titulo_site">
-                <div id="id">
-                    <img class="img_figura" src="_img/hamburguer.jpg" alt="Foto de Sanduíche">
-                    <img class="img_figura1"
-                        src="https://images.pexels.com/photos/2454533/pexels-photo-2454533.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                        alt="Foto de Sanduíche">
-                    <img class="img_figura2"
-                        src="https://images.pexels.com/photos/2725744/pexels-photo-2725744.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                        alt="Foto de Sanduíche">
-                </div>
-                <H1>Jeovah Lanches</H1>
-            </section>
-            <section id="Horário_funcionamento">
-                <ul>
-                    <H1>Horário de Funcionamento</H1>
-                    <ul class="texto4">DOMINGO: 18:30hrs às 00:00hrs</ul>
-                    <ul class="texto5">SEGUNDA: FECHADO</ul>
-                    <ul class="texto4">TERÇA: 17:30hrs às 00:00hrs</ul>
-                    <ul class="texto4">QUARTA: 17:30hrs às 00:00hrs</ul>
-                    <ul class="texto4">QUINTA: 17:30hrs às 00:00hrs</ul>
-                    <ul class="texto4">SEXTA: 17:30hrs às 00:00hrs</ul>
-                    <ul class="texto4">SÁBADO: 18:30hrs às 00:00hrs</ul>
-                </ul>
-            </section>
+        <section id="Titulo_site">
+            <div id="id">
+                <img class="img_figura" src="_img/hamburguer.jpg" alt="Foto de Sanduíche">
+                <img class="img_figura1"
+                    src="https://images.pexels.com/photos/2454533/pexels-photo-2454533.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                    alt="Foto de Sanduíche">
+                <img class="img_figura2"
+                    src="https://images.pexels.com/photos/2725744/pexels-photo-2725744.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                    alt="Foto de Sanduíche">
+            </div>
+            <h1>Jeovah Lanches</h1>
+        </section>
+        <section id="Horário_funcionamento">
             <ul>
+                <h1>Horário de Funcionamento</h1>
+                <ul class="texto4">DOMINGO: 18:30hrs às 00:00hrs</ul>
+                <ul class="texto5">SEGUNDA: FECHADO</ul>
+                <ul class="texto4">TERÇA: 17:30hrs às 00:00hrs</ul>
+                <ul class="texto4">QUARTA: 17:30hrs às 00:00hrs</ul>
+                <ul class="texto4">QUINTA: 17:30hrs às 00:00hrs</ul>
+                <ul class="texto4">SEXTA: 17:30hrs às 00:00hrs</ul>
+                <ul class="texto4">SÁBADO: 18:30hrs às 00:00hrs</ul>
             </ul>
+        </section>
+
+        <h1>Lanches Disponíveis</h1>
+        <div>
+            <% for (lanche of lanches) { %>
+                <article>
+                    <h1>
+                        <%= lanche.nome %>
+                    </h1>
+                    <span>Valor: <%= lanche.valor %></span>
+                    <span>Quantidade: <%= lanche.quantidade %></span>
+                    <a href="/detalhes/<%= lanche.id %>">Ver Detalhes</a>
+                </article>
+                <% } %>
         </div>
     </main>
     <footer class="desenvolvido_texto">Desenvolvido por Jeovah <a href="autor">Autor</a></footer>

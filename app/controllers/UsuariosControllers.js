@@ -1,67 +1,72 @@
-const Usuario = require('./../lib/projeto/usuario');
+const express = require('express');
+const Usuario = require('../lib/projeto/Usuario');
 const utils = require('../lib/utils');
+const { Sequelize, DataTypes, Model } = require('sequelize');
 
 class UsuariosController {
-    constructor(usuariosDao) {
-        this.usuariosDao = usuariosDao;
+    constructor(lanchesStore) {
+        this.lanchesStore = lanchesStore;
     }
 
     async listar(req, res) {
-        let usuarios = await this.usuariosDao.listar();
+        try {
+            const usuarios = await this.lanchesStore.listarUsuarios();
 
-        let dados = usuarios.map(usuario => {
-            return {
-                ...usuario
-            };
-        })
-
-        utils.renderizarJSON(res, dados);
+            res.render('usuarios', { usuarios });
+        } catch (error) {
+            console.error('Erro ao listar usuários:', error);
+            res.status(500).send('Erro ao listar usuários');
+        }
     }
     
     async inserir(req, res) {
         let usuario = await this.getUsuarioDaRequisicao(req);
         try {
-            usuario.id = await this.usuariosDao.inserir(usuario);
-            utils.renderizarJSON(res, {usuario, 
+            usuario.id = await this.lanchesStore.inserirUsuario(usuario);
+
+            utils.renderizarJSON(res, {
+                usuario,
                 mensagem: 'mensagem_usuario_cadastrado'
             });
-        } catch (e) {
-            utils.renderizarJSON(res, {
-                mensagem: e.message
-            }, 400);
-        }
-    }
-
-    async alterar(req, res) {
-        let usuario = await this.getUsuarioDaRequisicao(req);
-        let [ url, queryString ] = req.url.split('?');
-        let urlList = url.split('/');
-        url = urlList[1];
-        let id = urlList[2];
-        try {
-            this.usuariosDao.alterar(id, usuario);
-            utils.renderizarJSON(res, {
-                mensagem: 'mensagem_usuario_alterado'
-            });
-        } catch (e) {
+        } catch(e) {
             utils.renderizarJSON(res, {
                 mensagem: e.message
             }, 400);
         }
     }
     
-    apagar(req, res) {
-        let [ url, queryString ] = req.url.split('?');
-        let urlList = url.split('/');
-        url = urlList[1];
-        let id = urlList[2];
-        this.usuariosDao.apagar(id);
-        utils.renderizarJSON(res, {
-            mensagem: 'mensagem_usuario_apagado',
-            id: id
-        });
-    }
+    async alterar(req, res) {
+        let usuario = await this.getUsuarioDaRequisicao(req);
+        let id = req.params.id;
+        try {
+            await this.lanchesStore.alterarUsuario(id, usuario);
 
+            utils.renderizarJSON(res, {
+                mensagem: 'mensagem_usuario_alterado'
+            });
+        } catch(e) {
+            utils.renderizarJSON(res, {
+                mensagem: e.message
+            }, 400);
+        }
+    }
+    
+    async apagar(req, res) {
+        let id = req.params.id;
+        try {
+            await this.lanchesStore.apagarUsuario(id);
+
+            utils.renderizarJSON(res, {
+                mensagem: 'mensagem_usuario_apagado',
+                id: id
+            });
+        } catch(e) {
+            utils.renderizarJSON(res, {
+                mensagem: e.message
+            }, 400);
+        }
+    }
+    
     async getUsuarioDaRequisicao(req) {
         let corpo = await utils.getCorpo(req);
         let usuario = new Usuario(
@@ -70,6 +75,33 @@ class UsuariosController {
             corpo.papel
         );
         return usuario;
+    }
+
+    async getUser(id){
+        let usuario = await Usuario.findOne({
+            raw: true,
+            where: {
+            id: (id),
+            },   
+        });
+        return usuario;
+    }
+
+    getRouter() {
+        let rotas = express.Router();
+        rotas.get('/', (req, res) => {
+            this.listar(req, res);
+        });
+        rotas.post('/', (req, res) => {
+            this.inserir(req, res);
+        });
+        rotas.put('/:id', (req, res) => {
+            this.alterar(req, res);
+        });
+        rotas.delete('/:id', (req, res) => {
+            this.apagar(req, res);
+        });
+        return rotas;
     }
 }
 

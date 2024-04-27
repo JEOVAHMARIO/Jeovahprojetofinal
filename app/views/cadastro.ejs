@@ -5,72 +5,44 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jeovah Lanches</title>
-    <link rel="stylesheet" href="_css/estilo2.css" />
+    <title>Jeovah Lanches - Cadastro</title>
+    <link rel="stylesheet" href="/_css/estilo2.css" />
     <style>
         .correto {
             color: rgb(227, 243, 9);
         }
+
         .incorreto {
             color: red;
         }
     </style>
 </head>
+
 <body>
     <header>
-    <%- include('/home/node/app/views/cabecalho.ejs') %>
+        <%- include('/home/node/app/views/cabecalho.ejs') %>
     </header>
-      <main>
 
-        <body>
-          <!DOCTYPE html>
-          <html>
+    <section id="Titulo_site">
+        <h1>Cadastro de Usuários</h1>
+    </section>
 
-        <header id="Titulo_site">
-            
-            <section id="resposta">
-            <form method="post" onSubmit="event.preventDefault(); lanches();" id="formulario">
+    <section id="resposta">
+        <form action="/usuarios" method="post">
+            <br><br>
+            <h2>Cadastro</h2><br>
+            <input name="id" type="hidden" value="0">
+            <label for="nome">Nome:</label><br>
+            <input type="text" id="nome" name="nome"><br>
+            <label for="email">E-mail:</label><br>
+            <input type="email" id="email" name="email"><br>
+            <label for="senha">Senha:</label><br>
+            <input type="password" id="senha" name="senha"><br><br>
+            <button type="submit" class="button button2">Registrar</button>
+        </form>
+    </section>
 
-                <br><br>
-                <h2>Usuários</h2><br>
-                <input name="id" type="hidden" value="0">
-                <label for="nome">Nome:</label><br>
-                <input type="text" id="nome" name="nome"><br>
-                <label for="valor">E-mail</label><br>
-                <input type="text" id="valor" name="valor"><br>
-                <label for="quantidade">Senha</label><br>
-                <input type="text" id="quantidade" name="quantidade"><br><br>
-                <button type="submit" class="button button2">Registrar</button>
-            </form>
-            </section>
-            <br>
-            <button onclick="listar();">Listar</button>
-            
-            <section>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Nome</th>
-                            <th>E-mail</E-mail></th>
-                            <th>Senha</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="lanches">
-                        
-                    </tbody>
-                </table>
-            </section>
-        <div>
-        <section id="Titulo_site">
-          <H1>Jeovah Lanches</H1>
-          <img class="img_frase" src="_img/frase_hamburguer.jpg" alt="Frase de hamburguer">
-        </section>
-      </div>
-      <footer class="desenvolvido_texto">Desenvolvido por Jeovah <a href="autor">Autor</a></footer>
-
-      <script src="/_js/lanche.js"></script>
+    <footer class="desenvolvido_texto">Desenvolvido por Jeovah <a href="autor">Autor</a></footer>
 </body>
 
-</html
+</html>

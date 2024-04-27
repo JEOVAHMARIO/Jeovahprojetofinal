@@ -1,4 +1,4 @@
-const Usuario = require("./usuario")
+const Usuario = require("./Usuario")
 const bcrypt = require('bcrypt')
 
 class UsuariosMysqlDao {

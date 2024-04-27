@@ -1,8 +1,7 @@
+const fs = require('fs');
+const path = require('path');
 const utils = require("../lib/utils");
-const jwt = require('jsonwebtoken');
-
-let fs = require('fs');
-let path = require('path');
+const express = require('express');
 
 class EstaticoController {
     async procurar(req, res) {
@@ -16,9 +15,18 @@ class EstaticoController {
             this.naoEncontrado(req, res);
         }
     }
+    getRouter() {
+        let router = express.Router();
 
-    naoEncontrado(req, res){
-        res.writeHead(404, {'Content-Type': 'text/html'});
+        router.get('/', (req, res) => {
+            this.procurar(req, res);
+        });
+
+        return router;
+    }
+
+    naoEncontrado(req, res) {
+        res.writeHead(404, { 'Content-Type': 'text/html' });
         res.write(`<!DOCTYPE html>
         <html lang="pt-BR">
         <head>
@@ -30,12 +38,6 @@ class EstaticoController {
         res.write('<h1>Não encontrado!</h1>');
         res.write('</body>')
         res.end();
-    }  
-    admin(req, res) {
-        utils.renderizarEjs(res, './views/admin.ejs');
-    }
-    cadastro(req, res) {
-        utils.renderizarEjs(res, './views/cadastro.ejs');
     }
 }
 
